@@ -14,10 +14,10 @@ class Calculator {
         // Basically sets the initial value
         if (this.currentInput === '' && number === '.') {
             this.currentInput = '0.';
-        } 
+        }
         else if (this.currentInput === '') {
             this.currentInput = number;
-        } 
+        }
         else {
             this.currentInput += number;
         }
@@ -26,52 +26,79 @@ class Calculator {
     }
 
     public removeNumber(): void {
-        if(this.currentInput === '') return;
+        if (this.currentInput === '') return;
 
-        if(this.currentInput !== ''){
+        if (this.currentInput !== '') {
             this.currentInput = this.currentInput.slice(0, -1);
         }
-        
+
         this.updateDisplay();
     }
 
     public updateDisplay() {
         const display = document.querySelector('.display-input') as HTMLElement;
-        display!.innerText = this.currentInput || '0';
+        display!.innerText = this.currentInput || this.operator || '0';
     }
 
-    public chooseOperator(operator: Operator): void{
-        if(this.currentInput === "" && this.prevInput === "") return;
+    public chooseOperator(operator: Operator): void {
+        if (this.currentInput === "" && this.prevInput === "") return;
 
-        if(this.currentInput!== "" && this.prevInput !== ""){
+        if (this.currentInput !== "" && this.prevInput !== "") {
             this.compute();
         }
 
         const operators = ['-', '+', '÷', '×'];
         const lastChar = this.currentInput.slice(-1)
 
-        if(operators.includes(lastChar)){
+        if (operators.includes(lastChar)) {
             return
         }
 
         this.operator = operator;
-        this.prevInput = this.currentInput
+        // Set the previous input correctly
+        this.prevInput = this.currentInput;
+        // reset the reference input
+        this.currentInput = '';
 
-        console.log('this is current' + this.currentInput)
-        console.log('this is prev' + this.prevInput)
         this.updateDisplay();
     }
 
-    public compute(){
-        const currentInput = this.currentInput;
+    public compute(): void {
+        let currentInput = parseFloat(this.currentInput);
+        let prevInput = parseFloat(this.prevInput);
 
-        for(const letter of currentInput){
-            switch(this.operator){
-                case '-':
-                    
-                    
-            }
+        let calculate: number = 0;
+
+        switch (this.operator) {
+            case '+':
+                calculate = prevInput + currentInput
+                break
+            case '-':
+                calculate = prevInput - currentInput
+                break
+            case '÷':
+                calculate = prevInput / currentInput
+                break
+            case '×':
+                calculate = prevInput * currentInput
+                break
+            // In the case of equal
+            default:
+                return;
         }
+
+        this.currentInput = (Math.round(calculate * 100) / 100).toString();
+        this.operator = null;
+        this.prevInput = '';
+        this.updateDisplay();
+    }
+    
+
+    public clear(): void {
+        this.currentInput = '';
+        this.operator = null;
+        this.prevInput = '';
+        this.updateDisplay();
     }
 }
 
@@ -83,13 +110,16 @@ document.getElementById('buttons')?.addEventListener('click', (e) => {
     if (target.classList.contains('num')) {
         calculator.appendNumber(target.innerText);
     }
-    if(target.classList.contains('del')){
+    if (target.classList.contains('del')) {
         calculator.removeNumber()
     }
-    if(target.classList.contains('operator')){
+    if (target.classList.contains('operator')) {
         calculator.chooseOperator(target.innerText as Operator);
     }
-    if(target.classList.contains('equal')){
-        calculator.compute()
+    if (target.classList.contains('equal')) {
+        calculator.compute();
+    }
+    if (target.classList.contains('clear')){
+        calculator.clear();
     }
 })

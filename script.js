@@ -30,7 +30,7 @@ class Calculator {
     }
     updateDisplay() {
         const display = document.querySelector('.display-input');
-        display.innerText = this.currentInput || '0';
+        display.innerText = this.currentInput || this.operator || '0';
     }
     chooseOperator(operator) {
         if (this.currentInput === "" && this.prevInput === "")
@@ -44,18 +44,43 @@ class Calculator {
             return;
         }
         this.operator = operator;
+        // Set the previous input correctly
         this.prevInput = this.currentInput;
-        console.log('this is current' + this.currentInput);
-        console.log('this is prev' + this.prevInput);
+        // reset the reference input
+        this.currentInput = '';
         this.updateDisplay();
     }
     compute() {
-        const currentInput = this.currentInput;
-        for (const letter of currentInput) {
-            switch (this.operator) {
-                case '-':
-            }
+        let currentInput = parseFloat(this.currentInput);
+        let prevInput = parseFloat(this.prevInput);
+        let calculate = 0;
+        switch (this.operator) {
+            case '+':
+                calculate = prevInput + currentInput;
+                break;
+            case '-':
+                calculate = prevInput - currentInput;
+                break;
+            case '÷':
+                calculate = prevInput / currentInput;
+                break;
+            case '×':
+                calculate = prevInput * currentInput;
+                break;
+            // In the case of equal
+            default:
+                return;
         }
+        this.currentInput = (Math.round(calculate * 100) / 100).toString();
+        this.operator = null;
+        this.prevInput = '';
+        this.updateDisplay();
+    }
+    clear() {
+        this.currentInput = '';
+        this.operator = null;
+        this.prevInput = '';
+        this.updateDisplay();
     }
 }
 const calculator = new Calculator();
@@ -72,6 +97,9 @@ document.getElementById('buttons')?.addEventListener('click', (e) => {
     }
     if (target.classList.contains('equal')) {
         calculator.compute();
+    }
+    if (target.classList.contains('clear')) {
+        calculator.clear();
     }
 });
 export {};
