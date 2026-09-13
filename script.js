@@ -1,3 +1,7 @@
+const numberButton = document.querySelectorAll('.num');
+const displayInput = document.querySelector('.display-input');
+console.log(displayInput);
+// Helper functions
 function add(a, b) {
     return a + b;
 }
@@ -9,10 +13,24 @@ function multiply(a, b) {
 }
 function divide(a, b) {
     if (b === 0) {
-        throw new Error('fuck you');
+        throw new Error('You cannot divide by zero!');
     }
     return a / b;
 }
-console.log(divide(2, 0));
+// Main function
+function operate(a, b, c) {
+    switch (b) {
+        case "+":
+            console.log("= is selected!");
+        case "-":
+            console.log("= is selected!");
+        case "":
+            console.log("= is selected!");
+        case "=":
+            console.log("= is selected!");
+        case "=":
+            console.log("= is selected!");
+    }
+}
 export {};
 //# sourceMappingURL=script.js.map

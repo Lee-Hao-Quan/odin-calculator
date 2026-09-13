@@ -56,6 +56,7 @@ body {
     text-align: right;
     color: white;
     width: 300px;
+    height: 55px;
     justify-content: flex-end;
     margin-bottom: 20px;
 }
